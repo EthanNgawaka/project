@@ -10,8 +10,8 @@ var entirePage = document.getElementById("wholePage");
 var c = canvas.getContext("2d"); //c means context
 document.addEventListener('contextmenu', event => event.preventDefault());
 
-const windoww = c.width;
-const windowH = c.height;
+const windowW = canvas.width;
+const windowH = canvas.height;
 
 //Mouse Stuff//
 var mouse={x:0,y:0,button:{left:false, middle:false, right:false}};
@@ -55,12 +55,12 @@ The keys system currently works by adding any key pressed into the keys object
 the key is the key name and the value is a bool of if it is pressed
 */
 var keys = {}
-
+const logKeys = false;
 var pressedAnyKey = false;
 document.addEventListener('keydown', function(event) {
 		current_key = event.code;
 		keys[current_key] = true;
-		console.log(keys);
+        if(logKeys){console.log(keys);}
 		pressedAnyKey = true;
 	}
 );
@@ -160,16 +160,16 @@ class image{
         c.webkitImageSmoothingEnabled = false;
         c.mozImageSmoothingEnabled = false;
 		c.globalAlpha = alpha;
-		c.drawImage(this.img, X*scale,Y*scale, W*scale,H*scale);
+		c.drawImage(this.img, X,Y, W,H);
 		c.globalAlpha = 1;
 		c.restore();
 	}
 
 	drawRotatedImg(X, Y, W, H, alpha, rotation, rotateAroundX = 0, rotateAroundY = 0){
 		c.save();
-		c.translate(X*scale, Y*scale);
+		c.translate(X, Y);
 		c.rotate(rotation);
-		this.drawImg(-rotateAroundX, -rotateAroundY, W*scale, H*scale, alpha);
+		this.drawImg(-rotateAroundX, -rotateAroundY, W, H, alpha);
 		c.restore();
 	}
 }
@@ -202,7 +202,7 @@ class spriteSheet{
             this.sheetX = 0;
 		}
 		c.globalAlpha = alpha;
-        c.drawImage(this.img,this.sheetX,this.states[this.state][0],this.w,this.h,this.x*scale,this.y*scale,this.draww*scale,this.drawh*scale);
+        c.drawImage(this.img,this.sheetX,this.states[this.state][0],this.w,this.h,this.x,this.y,this.draww,this.drawh);
         c.restore();
     }
     addState(statename,correspondingLine,numofframes){
@@ -224,8 +224,8 @@ class spriteSheet{
 function drawLine(x1,y1,x2,y2,col){
     c.beginPath();
     c.strokeStyle = col;
-    c.moveTo(x1*scale,y1*scale);
-    c.lineTo(x2*scale,y2*scale);
+    c.moveTo(x1,y1);
+    c.lineTo(x2,y2);
     c.stroke();
 }
 
@@ -238,7 +238,7 @@ function drawRect(rect,col,fill,fillcolor,alpha){
     c.strokeStyle = col;
     c.globalAlpha = alpha;
     c.beginPath();
-    c.rect(x*scale,y*scale,w*scale,h*scale);
+    c.rect(x,y,w,h);
     if (fill){
         c.fillStyle = fillcolor;
         c.fill();
@@ -252,7 +252,7 @@ function drawCircle(x,y,r,col,fill,fillcolor,alpha){
     c.strokeStyle = col;
     c.globalAlpha = alpha;
     c.beginPath();
-    c.arc(x*scale,y*scale,r*scale,0,360,false);
+    c.arc(x,y,r,0,360,false);
     if (fill){
         c.fillStyle = fillcolor;
         c.fill();
